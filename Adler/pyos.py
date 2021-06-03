@@ -36,17 +36,31 @@ class os_t:
             self.console_str = self.console_str[:-1]
             self.terminal.console_print("\r" + self.console_str)
         elif (key == curses.KEY_ENTER) or (key == ord('\n')):
+            self.console_comandos()
             self.interpret_cmd(self.console_str)
             self.console_str = ""
 
-    def handle_interrupt(self, interrupt): 
+    def handle_interrupt(self, interrupt):
         if interrupt == pycfg.INTERRUPT_KEYBOARD:
-          self.interrupt_keyboard()
-          
+            self.interrupt_keyboard()
+
     def interpret_cmd(self, cmd):
         if cmd == "exit":
-            self.cpu.cpu_alive = False        
+            self.cpu.cpu_alive = False
 
     def syscall(self):
         # self.terminal.app_print(msg)
         return
+
+    def console_comandos(self):
+        comando = self.console_str.split(" ")
+
+        if(self.console_str == "msg"):
+            if(comando[0] == "msg"):
+                self.terminal.console_print("msg msg Bye Tchau ...")
+                self.terminal.end()
+                self.cpu.cpu_alive = False
+            return
+
+        if(comando[0] == "start" and len(comando) == 2):
+            self.terminal.console_print("\nCarregando..."+comando[1])

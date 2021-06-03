@@ -42,7 +42,10 @@ class os_t:
     def handle_interrupt(self, interrupt): 
         if interrupt == pycfg.INTERRUPT_KEYBOARD:
           self.interrupt_keyboard()
-        
+          
+    def interpret_cmd(self, cmd):
+        if cmd == "exit":
+            self.cpu.cpu_alive = False        
 
     def syscall(self):
         # self.terminal.app_print(msg)

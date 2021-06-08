@@ -57,9 +57,11 @@ class os_t:
 
         if(self.console_str == "msg"):
             if(comando[0] == "msg"):
-                self.terminal.console_print("msg msg Bye Tchau ...")
-                self.terminal.end()
-                self.cpu.cpu_alive = False
+                self.interpret_cmd(self.console_str)
+                self.console_str = ""
+                self.terminal.console_print(" Mensagem Exibida!...")
+                #self.terminal.end()
+                #self.cpu.cpu_alive = False
             return
 
         if(comando[0] == "start" and len(comando) == 2):

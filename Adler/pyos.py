@@ -39,6 +39,7 @@ class os_t:
             self.console_comandos()
             self.interpret_cmd(self.console_str)
             self.console_str = ""
+            self.terminal.console_print("\r")
 
     def handle_interrupt(self, interrupt):
         if interrupt == pycfg.INTERRUPT_KEYBOARD:
@@ -59,7 +60,8 @@ class os_t:
             if(comando[0] == "msg"):
                 self.interpret_cmd(self.console_str)
                 self.console_str = ""
-                self.terminal.console_print(" Mensagem Exibida!...")
+                #self.terminal.console_print(" Mensagem Exibida!...")
+                self.printk("Mensagem Exibida!...")
                 #self.terminal.end()
                 #self.cpu.cpu_alive = False
             return

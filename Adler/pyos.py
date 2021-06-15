@@ -6,14 +6,14 @@ from pyarch import cpu_t
 
 class task_t:
     def __init__(self):
-        self.regs = [0, 0, 0, 0, 0, 0, 0, 0]
-        self.reg_pc = 0
+        self.registrador = [0, 0, 0, 0, 0, 0, 0, 0]
+        self.registrador_pc = 0
         self.stack = 0
         self.paddr_offset = 0
         self.paddr_max = 0
         self.bin_name = ""
         self.bin_size = 0
-        self.tid = 0
+        self.task_id = 0
         self.state = PYOS_TASK_STATE_READY
         
         

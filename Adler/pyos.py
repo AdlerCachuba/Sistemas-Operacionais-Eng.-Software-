@@ -4,15 +4,25 @@ import pycfg
 from pyarch import load_binary_into_memory
 from pyarch import cpu_t
 
-
+class task_t:
+    def __init__(self):
+        self.regs = [0, 0, 0, 0, 0, 0, 0, 0]
+        self.reg_pc = 0
+        self.stack = 0
+        self.paddr_offset = 0
+        self.paddr_max = 0
+        self.bin_name = ""
+        self.bin_size = 0
+        self.tid = 0
+        self.state = PYOS_TASK_STATE_READY
+        
+        
 class os_t:
     def __init__(self, cpu, memory, terminal):
         self.cpu = cpu
         self.memory = memory
         self.terminal = terminal
-
         self.terminal.enable_curses()
-
         self.console_str = ""
         self.terminal.console_print(
             "this is the console, type the commands here\n")
@@ -44,13 +54,19 @@ class os_t:
     def handle_interrupt(self, interrupt):
         if interrupt == pycfg.INTERRUPT_KEYBOARD:
             self.interrupt_keyboard()
-
+        elif interrupt == pycfg.INTERRUPT_TIMER:
+            self.printk("Kernel: Interrupcao de tempo ainda nao implementada")
+        elif interrupt == pycfg.INTERRUPT_MEMORY_PROTECTION_FAULT:
+            self.printk("Kernel: Interrupcao de falta de memoria ainda nao implementada")
+        return 
+    
     def interpret_cmd(self, cmd):
         if cmd == "exit":
             self.cpu.cpu_alive = False
 
     def syscall(self):
-        # self.terminal.app_print(msg)
+        message = "Essa syscall ainda nao esta implementada"
+        self.printk("Kernel: " + message)
         return
 
     def console_comandos(self):
@@ -67,4 +83,4 @@ class os_t:
             return
 
         if(comando[0] == "start" and len(comando) == 2):
-            self.terminal.console_print("\nCarregando..."+comando[1])
+            self.printk("\nCarregando..."+comando[1])

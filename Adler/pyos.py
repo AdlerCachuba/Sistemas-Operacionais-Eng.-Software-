@@ -8,14 +8,10 @@ class task_t:
     def __init__(self):
         self.registrador = [0, 0, 0, 0, 0, 0, 0, 0]
         self.registrador_pc = 0
-        self.stack = 0
-        self.paddr_offset = 0
-        self.paddr_max = 0
+        
         self.bin_name = ""
         self.bin_size = 0
-        self.task_id = 0
-        self.state = PYOS_TASK_STATE_READY
-        
+
         
 class os_t:
     def __init__(self, cpu, memory, terminal):
@@ -76,11 +72,8 @@ class os_t:
             if(comando[0] == "msg"):
                 self.interpret_cmd(self.console_str)
                 self.console_str = ""
-                #self.terminal.console_print(" Mensagem Exibida!...")
                 self.printk("Mensagem Exibida!...")
-                #self.terminal.end()
-                #self.cpu.cpu_alive = False
             return
 
-        if(comando[0] == "start" and len(comando) == 2):
-            self.printk("\nCarregando..."+comando[1])
+        if(comando[0] == "start" ):
+            self.printk("\nCarregando...")

@@ -270,7 +270,7 @@ class os_t:
 		task = self.current_task
 
 		if service == 0:
-			self.printk("app "+self.current_task.bin_name+" request finish")
+			self.printk("app "+self.current_task.bin_name+" request finish !")
 			self.un_sched(task)
 			self.terminate_unsched_task(task)
 			self.sched(self.idle_task)

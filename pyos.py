@@ -275,10 +275,6 @@ class os_t:
 			self.terminate_unsched_task(task)
 			self.sched(self.idle_task)
 
-    # Criar uma variavel para guardar o registrador no endereco virtual
-    # Criar uma variavel para guardar o endereco virtual salvo na memoria no endereco fisico
-    # Carregar o texto (String) alocado no endereco fisico pela variavel texto
-
 		elif service == 1:
 			end_virtual = self.cpu.get_reg(1)
 			end_fisico = task.paddr_offset+end_virtual
@@ -287,8 +283,6 @@ class os_t:
 				texto = self.memory.read(end_fisico)
 
 				end_fisico = end_fisico + 1
-
-
 				if texto == 0:
 					break
 				self.terminal.app_print(str(chr(texto)))			

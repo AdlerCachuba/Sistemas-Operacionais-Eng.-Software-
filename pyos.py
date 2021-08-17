@@ -109,7 +109,6 @@ class os_t:
 		if task.state != PYOS_TASK_STATE_READY:
 			self.panic("task "+task.bin_name+" must be in READY state for being scheduled (state = "+str(task.state)+")")
 
-
 		# TODO
 		# Escrever no processador os registradores de proposito geral salvos na task struct
 		for i in range(0, len(task.regs)):
@@ -124,10 +123,8 @@ class os_t:
 		# Escrever no processador os registradores que configuram a memoria virtual, salvos na task struct
 		self.cpu.set_paddr_max(task.paddr_max)
 		self.cpu.set_paddr_offset(task.paddr_offset)
-		
-
 		self.current_task = task
-		self.printk("scheduling task "+task.bin_name)
+		self.printk("Escalonando a task:"+task.bin_name)
 
 	def get_task_amount_of_memory (self, task):
 		return task.paddr_max - task.paddr_offset + 1
@@ -139,26 +136,18 @@ class os_t:
 	def allocate_contiguos_physical_memory_to_task (self, words, task):
 		# TODO
 		# Localizar um bloco de memoria livre para armazenar o processo
-
-		if self.idle_task is None:
-			free_space_init = 0
-
-		else:
+		free_space_init = 0
+		if self.idle_task is not None:
 		    free_space_init = self.idle_task.paddr_max + 1
+      		free_space = self.memory.get_size() - free_space_init
 
-		free_space = self.memory.get_size() - free_space_init
-
-		if (free_space >= words):
-		        return free_space_init, free_space_init+words-1
-
-
-			# if we get here, there is no free space to put the task
-
-			self.printk("could not allocate memory to task "+task.bin_name)
+		if ( words<= free_space):
+		        return free_space_init, (free_space_init+words)-1
+		else:
+			self.printk("Nao foi possivel alocal memoria para a task"+task.bin_name)
 			return -1, -1
 
 		# Retornar tupla <primeiro endereco livre>, <ultimo endereco livre>
-
 		# if we get here, there is no free space to put the task
  
 
@@ -218,22 +207,24 @@ class os_t:
 
 	def un_sched (self, task):
 		if task.state != PYOS_TASK_STATE_EXECUTING:
-			self.panic("task "+task.bin_name+" must be in EXECUTING state for being scheduled (state = "+str(task.state)+")")
+			self.panic("A task "+task.bin_name+" precisa estar executando para desescalonar")
 		if task is not self.current_task:
-			self.panic("task "+task.bin_name+" must be the current_task for being scheduled (current_task = "+self.current_task.bin_name+")")
+			self.panic("A task solicitada: "+task.bin_name+" precisa ser a task executada para ser desescalonada, a task atual eh "+self.current_task.bin_name+")")
 
 		# TODO
 		# Salvar na task struct
 		# - registradores de proposito geral
+  		for x in range(0,8):
+			task.regs[x] = self.cpu.get_reg(x)
+	
 		# - PC
-		task.regs = [0, 0, 0, 0, 0, 0, 0, 0]
-		task.reg_pc = 0
-
+		task.reg_pc = self.cpu.get_pc()
+  
 		# Atualizar o estado do processo
 		task.state = PYOS_TASK_STATE_READY
 
 		self.current_task = None
-		self.printk("unscheduling task "+task.bin_name)
+		self.printk("Desescalonando a task: "+task.bin_name)
 
 	def virtual_to_physical_addr (self, task, vaddr):
 		return task.paddr_offset + vaddr
@@ -270,22 +261,26 @@ class os_t:
 		task = self.current_task
 
 		if service == 0:
-			self.printk("app "+self.current_task.bin_name+" request finish !")
+			self.printk("A task "+self.current_task.bin_name+" vai ser finalizada !")
+			self.printk("E a idle task ira entrar no lugar.")
 			self.un_sched(task)
-			self.terminate_unsched_task(task)
+  		 	self.terminate_unsched_task(task)
 			self.sched(self.idle_task)
 
 		elif service == 1:
+		
 			end_virtual = self.cpu.get_reg(1)
-			end_fisico = task.paddr_offset+end_virtual
+			end_fisico = task.paddr_offset + end_virtual
+			texto = ""
 
 			while True:
-				texto = self.memory.read(end_fisico)
-
-				end_fisico = end_fisico + 1
-				if texto == 0:
+				valorlido = self.memory.read(end_fisico)
+				if valorlido == 0:
 					break
-				self.terminal.app_print(str(chr(texto)))			
+				texto = texto + chr(valorlido)
+				end_fisico = end_fisico + 1
+    
+			self.terminal.app_print(texto)
 
 		elif service == 2:
 			self.terminal.app_print("\n")
@@ -294,4 +289,4 @@ class os_t:
 			self.terminal.app_print(str(self.cpu.get_reg(1)))
 
 		else:
-			self.handle_gpf("invalid syscall "+str(service))
+			self.handle_gpf("syscall invalida" +str(service))

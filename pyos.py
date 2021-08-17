@@ -214,7 +214,7 @@ class os_t:
 		# TODO
 		# Salvar na task struct
 		# - registradores de proposito geral
-  		for x in range(0,8):
+  		for x in range(0,pycfg.NREGS):
 			task.regs[x] = self.cpu.get_reg(x)
 	
 		# - PC

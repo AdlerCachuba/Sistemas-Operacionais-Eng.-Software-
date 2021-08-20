@@ -8,7 +8,7 @@ Equipe: Adler Mateus Cachuba, Isac Ponciano Bandeira, Franciel Ruan
 Abra o terminal na pasta e digite:
 
 ```bash
-python2 pysim.py
+python pysim.py
 ```
 
 ## Tecnologias

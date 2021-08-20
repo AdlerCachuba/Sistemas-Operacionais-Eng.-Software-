@@ -111,7 +111,7 @@ class os_t:
 
 		# TODO
 		# Escrever no processador os registradores de proposito geral salvos na task struct
-		for i in range(0, len(task.regs)):
+		for i in range(0, pycfg.NREGS):
 			self.cpu.set_reg(i, task.regs[i])
 
 		# Escrever no processador o PC salvo na task struct
@@ -269,16 +269,16 @@ class os_t:
 
 		elif service == 1:
 		
-			end_virtual = self.cpu.get_reg(1)
-			end_fisico = task.paddr_offset + end_virtual
+			endereco_virtual = self.cpu.get_reg(1)
+			endereco_fisico = task.paddr_offset + endereco_virtual
 			texto = ""
 
 			while True:
-				valorlido = self.memory.read(end_fisico)
+				valorlido = self.memory.read(endereco_fisico)
 				if valorlido == 0:
 					break
 				texto = texto + chr(valorlido)
-				end_fisico = end_fisico + 1
+				endereco_fisico = endereco_fisico + 1
     
 			self.terminal.app_print(texto)
 

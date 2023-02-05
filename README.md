@@ -1,7 +1,5 @@
 # Sistemas Operacionais
-Profesor da disciplina: Eduardo Henrique Molina Da Cruz
-
-Equipe: Adler Mateus Cachuba, Isac Ponciano Bandeira, Franciel Ruan
+Professor da disciplina: Eduardo Henrique Molina Da Cruz
 
 ## Como funcionar o projeto?
 
